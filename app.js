@@ -23,7 +23,7 @@ require('./db/conn')
 
 
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'https://shopgo-com.onrender.com');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', "true");
@@ -33,7 +33,7 @@ app.use(function (req, res, next) {
 
 
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: "https://shopgo-com.onrender.com",
     methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
     credentials: true,
 }))
