@@ -43,11 +43,13 @@ exports.sendMessages = catchAsyncError(async (req, res,next) => {
             body: "Someone Order product ...please check"
           })
           .then(() => {
-            return res.status(200).send(JSON.stringify({ success: true,message:"Send Succesfully" }));
+             return res.status(200).send(JSON.stringify({ success: true,message:"Send Succesfully" }));
+          
           })
           .catch(err => {
            
             return res.status(400).send(JSON.stringify({ success: false,error:err.stack }));
+            
           });
       
             return await res.status(200).send(JSON.stringify({ success: true,info,message:"Send Succesfully" }));
