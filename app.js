@@ -23,7 +23,7 @@ require('./db/conn')
 
 
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'https://shopgo-com.onrender.com');
+    res.setHeader('Access-Control-Allow-Origin', `${process.env.REACT_CLIENT_URL}`);
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', "true");
@@ -33,10 +33,11 @@ app.use(function (req, res, next) {
 
 
 app.use(cors({
-    origin: "https://shopgo-com.onrender.com",
+    origin: `${process.env.REACT_CLIENT_URL}`,
     methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
     credentials: true,
 }))
+
 app.use(express.json())
 app.use(cookieParser())
 
