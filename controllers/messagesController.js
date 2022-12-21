@@ -40,29 +40,38 @@ exports.sendMessages = catchAsyncError(async (req, res,next) => {
 
       };
 
-    transporter.sendMail(mailOptions, async function(error, info){
+      transporter.sendMail(mailOptions, async function(error, info){
         if (error) {
             return await res.status(400).send(JSON.stringify({ success: false, error }));
+
         } else {
-          client.messages
-          .create({
-            from: process.env.TWILIO_PHONE_NUMBER,
-            to: "+919874266014",
-            body: `${name} Order product ...please check`
-          })
-          .then(() => {
-             return res.status(200).send(JSON.stringify({ success: true,message:"Send Succesfully" }));
-          
-          })
-          .catch(err => {
-           
-            return res.status(400).send(JSON.stringify({ success: false,error:err.stack }));
-            
-          });
-      
-            return await res.status(200).send(JSON.stringify({ success: true,info,message:"Send Succesfully" }));
+            return res.status(200).send({success: true,info,message:"Send Succesfully"})
         }
       });
+
+    // transporter.sendMail(mailOptions, async function(error, info){
+    //     if (error) {
+    //         return await res.status(400).send(JSON.stringify({ success: false, error }));
+    //     } else {
+    //       client.messages
+    //       .create({
+    //         from: process.env.TWILIO_PHONE_NUMBER,
+    //         to: "+919874266014",
+    //         body: `${name} Order product ...please check`
+    //       })
+    //       .then(() => {
+    //          return res.status(200).send(JSON.stringify({ success: true,message:"Send Succesfully" }));
+          
+    //       })
+    //       .catch(err => {
+           
+    //         return res.status(400).send(JSON.stringify({ success: false,error:err.stack }));
+            
+    //       });
+      
+    //         return await res.status(200).send(JSON.stringify({ success: true,info,message:"Send Succesfully" }));
+    //     }
+    //   });
 
 
 

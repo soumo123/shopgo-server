@@ -10,7 +10,7 @@ exports.createProduct = catchAsyncError(async (req, res, next) => {
 
     let images = [];
     if (typeof req.body.images === "string") {
-        images.push(req.body.images);
+        images.push(req.body.images);update
       } else {
         images = req.body.images;
       }
