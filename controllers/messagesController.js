@@ -25,8 +25,6 @@ exports.sendMessages = catchAsyncError(async (req, res,next) => {
         }
       });
       
-  
-
 
       const mailOptions = {
         from: process.env.NODEMAILER_EMAIL,
@@ -43,7 +41,8 @@ exports.sendMessages = catchAsyncError(async (req, res,next) => {
 
     transporter.sendMail(mailOptions, async function(error, info){
         if (error) {
-            return await res.status(400).send(JSON.stringify({ success: false, error }));
+        
+           return await res.status(400).send({ success: false, error:error.stack });
         } else {
           client.messages
           .create({
@@ -52,16 +51,16 @@ exports.sendMessages = catchAsyncError(async (req, res,next) => {
             body: `${name} Order product ...please check`
           })
           .then(() => {
-             return res.status(200).send(JSON.stringify({ success: true,message:"Send Succesfully" }));
+             return res.status(200).send({ success: true,message:"Send Succesfully" });
           
           })
           .catch(err => {
-           
-            return res.status(400).send(JSON.stringify({ success: false,error:err.stack }));
+           console.log(error.stack)
+            return res.status(400).send({ success: false,error:err.stack });
             
           });
       
-            return await res.status(200).send(JSON.stringify({ success: true,info,message:"Send Succesfully" }));
+            return await res.status(200).send({ success: true,info,message:"Send Succesfully" });
         }
       });
 
