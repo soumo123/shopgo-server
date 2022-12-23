@@ -1,4 +1,4 @@
-const ErrorHandler = require('../utils/errorHandler')
+
 const catchAsyncError = require('../middleware/catchAsyncError')
 const ApiFeatures = require('../utils/apifeature')
 const nodemailer = require('nodemailer');
@@ -16,7 +16,7 @@ const client = require('twilio')(
 exports.sendMessages = catchAsyncError(async (req, res,next) => {
   
   let name = req.body.name
-
+  let to = req.body.to
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -28,10 +28,10 @@ exports.sendMessages = catchAsyncError(async (req, res,next) => {
 
       const mailOptions = {
         from: process.env.NODEMAILER_EMAIL,
-        to: req.body.to,
+        to: to,
         envelope: {
           from: process.env.NODEMAILER_EMAIL,
-          to: req.body.to
+          to: to
         },
         subject: "shopgo.com",
         html: `<b><p>Thank You ${name} , Your order will delivered withing 4-5 days . Thank you for ordering...</p></b>`
@@ -42,7 +42,7 @@ exports.sendMessages = catchAsyncError(async (req, res,next) => {
     transporter.sendMail(mailOptions, async function(error, info){
         if (error) {
         
-           return await res.status(400).send({ success: false, error:error.stack });
+           return res.status(400).send({ success: false, error:error.stack });
         } else {
           client.messages
           .create({
@@ -60,7 +60,7 @@ exports.sendMessages = catchAsyncError(async (req, res,next) => {
             
           });
       
-            return await res.status(200).send({ success: true,info,message:"Send Succesfully" });
+            return res.status(200).send({ success: true,info,message:"Send Succesfully" });
         }
       });
 
