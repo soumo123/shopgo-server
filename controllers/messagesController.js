@@ -18,7 +18,7 @@ exports.sendMessages = catchAsyncError(async (req, res,next) => {
   let name = req.body.name
   let to = req.body.to
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: 'Gmail',
         auth: {
           user: process.env.NODEMAILER_EMAIL,
           pass: process.env.NODEMAILER_PASSWORD
