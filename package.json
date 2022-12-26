@@ -35,7 +35,7 @@
     "jsonwebtoken": "^8.5.1",
     "localStorage": "^1.0.4",
     "mongoose": "^5.13.14",
-    "nodemailer": "^6.7.8",
+    "nodemailer": "^6.8.0",
     "nodemailer-express-handlebars": "^6.0.0",
     "nodemon": "^2.0.19",
     "otp-generator": "^4.0.0",

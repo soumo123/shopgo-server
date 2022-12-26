@@ -2,7 +2,6 @@
 const catchAsyncError = require('../middleware/catchAsyncError')
 const ApiFeatures = require('../utils/apifeature')
 const nodemailer = require('nodemailer');
-const hbs = require('nodemailer-express-handlebars')
 const path = require('path')
 
 const client = require('twilio')(
@@ -13,7 +12,7 @@ const client = require('twilio')(
 
 
 
-exports.sendMessages = catchAsyncError(async (req, res,next) => {
+exports.sendMessages = catchAsyncError(async (req, res) => {
   
   let name = req.body.name
   let to = req.body.to
