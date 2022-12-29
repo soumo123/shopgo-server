@@ -4,3 +4,4 @@ const {sendMessages}  = require('../controllers/messagesController')
 
 
 router.route('/message').get(sendMessages)
+module.exports = router

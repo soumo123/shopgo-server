@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const product = require('./routes/productRoute')
+const message = require('./routes/messageRoute')
 const user = require('./routes/userRoute')
 const order = require('./routes/orderRoute')
 const payment = require("./routes/paymentRoute")
@@ -50,6 +51,8 @@ app.use('/api/soummya',product)
 app.use('/api/soummya',user)
 app.use('/api/soummya',order)
 app.use('/api/soummya',payment)
+app.use('/api/soummya',message)
+
 // error middleware
 
 app.use(errorMiddleware)
