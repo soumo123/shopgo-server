@@ -13,10 +13,12 @@ const client = require('twilio')(
 
 exports.sendMessages = catchAsyncError(async (req, res) => {
   
-  let name = req.body.name
-  let to = req.body.to
 
-  console.log("name& to", name , to)
+  return res.status(200).send({ success: true,message:"Send Succesfully" });
+  // let name = req.body.name
+  // let to = req.body.to
+
+  // console.log("name& to", name , to)
   //   const transporter = nodemailer.createTransport({
   //       service: 'gmail',
   //       auth: {
