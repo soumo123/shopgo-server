@@ -13,7 +13,7 @@ const fileUpload = require('express-fileupload')
 const path = require('path')
 
 
-const app = express();
+const app = express()
 
 
 if(process.env.NODE_ENV!=="PRODUCTION"){
