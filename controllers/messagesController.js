@@ -38,29 +38,31 @@ exports.sendMessages = catchAsyncError(async (req, res) => {
       };
 
 
-    transporter.sendMail(mailOptions, async function(error, info){
-        if (error) {
+      return res.status(200).send({ success: true, mailOptions:mailOptions });
+
+    // transporter.sendMail(mailOptions, async function(error, info){
+    //     if (error) {
         
-           return res.status(400).send({ success: false, error:error.stack });
-        } else {
-          client.messages
-          .create({
-            from: process.env.TWILIO_PHONE_NUMBER,
-            to: "+919874266014",
-            body: `${name} Order product ...please check`
-          })
-          .then(() => {
-             return res.status(200).send({ success: true,message:"Send Succesfully" });
+    //        return res.status(400).send({ success: false, error:error.stack });
+    //     } else {
+    //       client.messages
+    //       .create({
+    //         from: process.env.TWILIO_PHONE_NUMBER,
+    //         to: "+919874266014",
+    //         body: `${name} Order product ...please check`
+    //       })
+    //       .then(() => {
+    //          return res.status(200).send({ success: true,message:"Send Succesfully" });
           
-          })
-          .catch(err => {
-           console.log(error.stack)
-            return res.status(400).send({ success: false,error:err.stack });
+    //       })
+    //       .catch(err => {
+    //        console.log(error.stack)
+    //         return res.status(400).send({ success: false,error:err.stack });
             
-          });
+    //       });
       
-            return res.status(200).send({ success: true,info,message:"Send Succesfully" });
-        }
-      });
+    //         return res.status(200).send({ success: true,info,message:"Send Succesfully" });
+    //     }
+    //   });
 
 })
