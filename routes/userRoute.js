@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 
 const {registerUser,loginUser,forgotPassword,resetPassword,logout,getUserDetails,updatePassword,updateProfile,getAllUsers,getSingleUser,updateUserRole,deleteUser,OtpRequest, VerifyOtp} = require('../controllers/userController')
-const {sendMessages}  = require('../controllers/messagesController')
 const {isAuthenticatedUser,authorizeRoles} = require('../middleware/auth')
 
 router.route('/register').post(registerUser)
@@ -35,6 +34,5 @@ router.route("/admin/user/:id/:token").delete(isAuthenticatedUser,authorizeRoles
 
 router.route('/logout').get(logout)
 
-router.route('/message').post(sendMessages)
 
 module.exports = router

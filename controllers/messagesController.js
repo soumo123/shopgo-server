@@ -4,10 +4,10 @@ const ApiFeatures = require('../utils/apifeature')
 const nodemailer = require('nodemailer');
 const path = require('path')
 
-const client = require('twilio')(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
+// const client = require('twilio')(
+//   process.env.TWILIO_ACCOUNT_SID,
+//   process.env.TWILIO_AUTH_TOKEN
+// );
 
 
 
