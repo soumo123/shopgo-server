@@ -435,7 +435,7 @@ exports.sendMessages = catchAsyncError(async (req, res) => {
           html: `<b><p>Thank You ${name} , Your order will delivered withing 4-5 days . Thank you for ordering...</p></b>`
   
         };
-  
+  console.log("mailOptions",mailOptions)
   
         return res.status(200).send({ success: true, mailOptions:mailOptions });
   
