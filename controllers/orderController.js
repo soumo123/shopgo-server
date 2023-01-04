@@ -111,7 +111,6 @@ exports.updateOrder = catchAsyncError(async (req, res, next) => {
 
      if (req.body.status === "Shipped") {
     order.orderItems.forEach(async (o) => {
-        console.log("o.quantity",o.quantity)
       await updateStock(o.product, o.quantity);
     });
   }
@@ -119,7 +118,8 @@ exports.updateOrder = catchAsyncError(async (req, res, next) => {
     order.orderStatus = req.body.status 
 
     if(req.body.status==="Delivered"){
-        order.deliveredAt = Date.now()
+        // order.deliveredAt = Date.now()
+        order.paymentInfo.status = "succeeded"
     }
    
     await order.save({validateBefore: true})
