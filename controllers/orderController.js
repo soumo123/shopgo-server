@@ -163,3 +163,29 @@ exports.deleteOrder = catchAsyncError(async (req, res, next) => {
     })
 
 });
+
+
+
+
+
+//category-admin ----------------->
+
+
+exports.categoryAdmingetAllOrders = catchAsyncError(async (req, res, next) => {
+
+    const user = req.body.user_id
+    const orders = await Order.find({user:user})
+
+    let totalAmount = 0
+    orders.forEach(order=>{
+        totalAmount = totalAmount + order.totalPrice
+    })
+
+    res.status(200).json({
+        success: true,
+        message:"Orders Viewd my Cat-Admin..",
+        totalAmount,
+        orders
+    })
+
+});
