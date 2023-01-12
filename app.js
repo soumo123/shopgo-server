@@ -38,33 +38,24 @@ app.use((req, res, next) => {
          res.setHeader('Access-Control-Allow-Origin', origin);
     }
     res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.header('Access-Control-Allow-Credentials', true);
     return next();
   });
 
-
-
-  if(process.env.REACT_CLIENT_URL){
-    app.use(cors({
-        origin: `${process.env.REACT_CLIENT_URL}`,
-        methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
-        credentials: true,
-    }))
-    
+  var whitelist = [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_CAT_CLIENT_URL}`];
+  var corsOptions = {
+    origin: function (origin, callback) {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    }
   }
 
-
-  if(process.env.REACT_CAT_CLIENT_URL){
-    app.use(cors({
-        origin: `${process.env.REACT_CAT_CLIENT_URL}`,
-        methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
-        credentials: true,
-    }))
-    
-  }
-
-
+  app.use(cors(corsOptions))
 
 app.use(express.json())
 app.use(cookieParser())
