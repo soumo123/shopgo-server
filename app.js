@@ -44,11 +44,24 @@ app.use((req, res, next) => {
   });
 
 
-app.use(cors({
-    origin: [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_CAT_CLIENT_URL}`],
-    methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
-    credentials: true,
-}))
+var whitelist = [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_CAT_CLIENT_URL}`]
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
+app.use(cors(corsOptions))
+
+// app.use(cors({
+//     origin: [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_CAT_CLIENT_URL}`],
+//     methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+//     credentials: true,
+// }))
 
 app.use(express.json())
 app.use(cookieParser())
