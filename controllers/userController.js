@@ -1,4 +1,5 @@
 const ErrorHandler = require('../utils/errorHandler')
+const encrypt = require('../crypto/crypto.js')
 const catchAsyncError = require('../middleware/catchAsyncError')
 const User = require('../models/userModels')
 const sendToken = require('../utils/jwtToke')
@@ -17,15 +18,14 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
         width: 150,
         crop: "scale",
       });
-
-    const { name, email, password,number } = req.body
-    // const isEmail = await User.find({email:email})
-    // if(isEmail){
-    //     return next(new ErrorHandler('Email Already Present', 400))
-
-    // }
+      
+    const { name, email, password,number,gender,aadhar_card} = req.body
+    const isEmail = await User.find({email:email})
+    if(isEmail){
+        return next(new ErrorHandler('Email Already Present', 400))
+    }
     const user = await User.create({
-        name, email, password,number,
+        name, email, password,number,gender,aadhar_card,
         avatar: {
             public_id: myCloud.public_id,
             url:myCloud.secure_url

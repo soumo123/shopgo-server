@@ -54,6 +54,10 @@ const orderSchema = new mongoose.Schema({
                 type: mongoose.Schema.ObjectId,
                 ref:"Product",
                 required: true
+            },
+            user:{
+                type:String,
+                required: true
             }
         }
     ],
@@ -63,6 +67,10 @@ const orderSchema = new mongoose.Schema({
         ref:"User",
         required:true
     },
+
+    dealers:[
+
+    ],
     paymentInfo:{
         id:{
             type: String,

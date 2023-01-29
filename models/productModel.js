@@ -95,6 +95,10 @@ const productSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
+    deliveryDays:{
+        type:String,
+        default:0
+    },
     createdAt: {
         type: Date,
         default: Date.now

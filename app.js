@@ -35,7 +35,7 @@ app.use((req, res, next) => {
     const allowedOrigins = [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_CAT_CLIENT_URL}`];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
-         res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Access-Control-Allow-Origin', origin);
     }
     res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
@@ -44,7 +44,7 @@ app.use((req, res, next) => {
     return next();
   });
 
-  var whitelist = [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_CAT_CLIENT_URL}`];
+  var whitelist =  [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_CAT_CLIENT_URL}`];
   var corsOptions = {
     origin: function (origin, callback) {
       if (whitelist.indexOf(origin) !== -1) {
@@ -54,7 +54,7 @@ app.use((req, res, next) => {
       }
     }
   }
-
+  // app.use(cors())
   app.use(cors(corsOptions))
 
 app.use(express.json())
