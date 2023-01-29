@@ -189,6 +189,7 @@ exports.categoryAdmingetAllOrders = catchAsyncError(async (req, res, next) => {
     //     orders
     // })
     let data = []
+    let totalAmount = 0
     const user = req.body.user_id
     const allorders = await Order.find()
 
@@ -199,6 +200,7 @@ exports.categoryAdmingetAllOrders = catchAsyncError(async (req, res, next) => {
         orderItems.forEach((ele) => {
             if (ele.user === user) {
                 data.push(ele)
+                totalAmount = totalAmount + ele.price
             }
 
         })
@@ -207,8 +209,42 @@ exports.categoryAdmingetAllOrders = catchAsyncError(async (req, res, next) => {
 
     res.status(200).json({
         success: true,
-        message: "Orders Viewd my Cat-Admin..",
+        message: "Orders Viewd my Cat-Admin",
+        totalAmount,
         orders:data
     })
+
+});
+
+
+
+
+
+
+///get single order by cat -admin////////////////////////////////
+exports.categoryAdminSingleOrder = catchAsyncError(async (req, res, next) => {
+    let data = []
+    const productId = req.query.productId
+console.log("productId",productId)
+    const allorders = await Order.find()
+
+    for (let i = 0; i < allorders.length; i++) {
+
+        const orderItems = allorders[i].orderItems
+
+        orderItems.forEach((ele) => {
+            if (ele.id === productId) {
+                data.push(ele)
+            }
+
+        })
+
+    }
+    res.status(200).json({
+        success: true,
+        message: "Single Order Viewd my Cat-Admin",
+        orders:data
+    })
+
 
 });
