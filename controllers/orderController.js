@@ -4,6 +4,7 @@ const ErrorHandler = require('../utils/errorHandler')
 const catchAsyncError = require('../middleware/catchAsyncError')
 const { findById } = require("../models/orderModel")
 const { sendMessages } = require("./messagesController")
+const User = require('../models/userModels')
 
 
 //create new order//
@@ -174,20 +175,6 @@ exports.deleteOrder = catchAsyncError(async (req, res, next) => {
 
 exports.categoryAdmingetAllOrders = catchAsyncError(async (req, res, next) => {
 
-    // const user = req.body.user_id
-    // const orders = await Order.find({user:user})
-
-    // let totalAmount = 0
-    // orders.forEach(order=>{
-    //     totalAmount = totalAmount + order.totalPrice
-    // })
-
-    // res.status(200).json({
-    //     success: true,
-    //     message:"Orders Viewd my Cat-Admin..",
-    //     totalAmount,
-    //     orders
-    // })
     let data = []
     let totalAmount = 0
     const user = req.body.user_id
@@ -198,7 +185,9 @@ exports.categoryAdmingetAllOrders = catchAsyncError(async (req, res, next) => {
         const orderItems = allorders[i].orderItems
 
         orderItems.forEach((ele) => {
+           
             if (ele.user === user) {
+               
                 data.push(ele)
                 totalAmount = totalAmount + ele.price
             }
@@ -221,29 +210,45 @@ exports.categoryAdmingetAllOrders = catchAsyncError(async (req, res, next) => {
 
 
 
-///get single order by cat -admin////////////////////////////////
+///get single order by cat -admin///////////////////////////o/////
 exports.categoryAdminSingleOrder = catchAsyncError(async (req, res, next) => {
     let data = []
+    let users;
+    let shippingDetails;
+    let customer_id;
+    let customer_name;
     const productId = req.query.productId
-console.log("productId",productId)
-    const allorders = await Order.find()
+    let allorders = await Order.find()
+
+    
 
     for (let i = 0; i < allorders.length; i++) {
 
         const orderItems = allorders[i].orderItems
 
-        orderItems.forEach((ele) => {
-            if (ele.id === productId) {
-                data.push(ele)
+
+        for(let j = 0 ; j < orderItems.length ; j++){
+
+            if (orderItems[j].id === productId){
+                let order_id = allorders[i]._id
+                data.push(orderItems[j])
+                customer_id = orderItems[j].user
+                users = await User.find({_id:customer_id})
+                allorders = await Order.find({_id:order_id})
+                shippingDetails = allorders[0].shippingInfo
+                customer_name = users[0].name
+
             }
-
-        })
-
+        }
+        
     }
+
     res.status(200).json({
         success: true,
         message: "Single Order Viewd my Cat-Admin",
-        orders:data
+        orders:data,
+        customer_name:customer_name,
+        shippingDetails:shippingDetails
     })
 
 
