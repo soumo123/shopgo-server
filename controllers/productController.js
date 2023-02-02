@@ -82,8 +82,18 @@ exports.getAllproducts = catchAsyncError(async (req, res, next) => {
 
 exports.getAdminproducts = catchAsyncError(async (req, res, next) => {
 
-    const products = await Product.find()
+    const productName = req.query.name;
+    let products;
 
+    if(productName){
+        products = await Product.find({name:{ $regex:'.*'+productName+'.*',$options: 'i'}})
+    }else{
+        products = await Product.find()
+
+    }
+
+
+    
     res.status(200).json(
         {
             success: true,
