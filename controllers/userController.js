@@ -19,7 +19,7 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
         crop: "scale",
       });
       
-    const { name, email, password,number,gender,aadhar_card} = req.body
+    const { name, email, password,number} = req.body
     const isEmail = await User.find({email:email})
     if(isEmail){
         return next(new ErrorHandler('Email Already Present', 400))

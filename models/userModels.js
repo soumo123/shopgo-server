@@ -25,14 +25,6 @@ const userSchema = new mongoose.Schema({
         unique: true,
         maxLength: [10, "Number cannot exceed 10"],
     },
-
-    gender:{
-        type:String
-    },
-    aadhar_card:{
-        type:String,
-        default:null
-    },
     password: {
         type: String,
         required: [true, "Please enter your password"],
