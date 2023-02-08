@@ -95,6 +95,9 @@ const productSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
+    productsearch:{
+        type:String
+    },
     deliveryDays:{
         type:String,
         default:0

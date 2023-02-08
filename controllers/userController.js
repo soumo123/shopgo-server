@@ -13,27 +13,38 @@ const nodemailer = require('nodemailer');
 
 exports.registerUser = catchAsyncError(async (req, res, next) => {
 
-    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+    try{
+        
+    const myCloud = await cloudinary.v2.uploader.upload_large(req.body.avatar, {
         folder: "avatars",
-        width: 150,
+        width: 400,
+        height: 450,
+        quality: 100,
         crop: "scale",
       });
-      
+
     const { name, email, password,number} = req.body
     const isEmail = await User.find({email:email})
-    if(isEmail){
-        return next(new ErrorHandler('Email Already Present', 400))
+
+    if(isEmail.length > 0){
+        return res.status(400).json({message:"Email Already Present",status:false})
     }
     const user = await User.create({
-        name, email, password,number,gender,aadhar_card,
+        name, email, password,number,
         avatar: {
             public_id: myCloud.public_id,
             url:myCloud.secure_url
         }
     })
     sendToken(user, 200, res)
-})
 
+
+    }catch(error){
+        console.log(error)
+        return res.status(400).json({message:"Registration Unsuccesfull", error:error.stack})
+    }
+
+})
 //Login User//
 
 exports.loginUser = catchAsyncError(async (req, res, next) => {
@@ -254,7 +265,16 @@ exports.updateProfile = catchAsyncError(async (req, res, next) => {
 
 
 exports.getAllUsers = catchAsyncError(async (req, res, next) => {
-    const users = await User.find()
+    const name = req.query.name
+    let users ;
+    
+    if(name){
+        users = await User.find({name:{ $regex:'.*'+name+'.*',$options: 'i'}})
+
+    }else{
+        users = await User.find()
+    }
+    
     res.status(200).json({
         success: true,
         users

@@ -418,13 +418,26 @@ exports.getAllProductsByCategoryAdmin = catchAsyncError(async (req, res, next) =
 
 
     try {
-            const user = req.body.user_id
-            const products = await Product.find({user:user})
+            const user = req.params.user_id
+            const productName = req.query.name;
+            let products ; 
 
-            if(!products){
-                return res.status(400).send({success:true,message:"No products there",products:[]})
+            if(productName){
+                products = await Product.find({name:{ $regex:'.*'+productName+'.*',$options: 'i'},user:user})
+            }else{
+                products = await Product.find({user:user})
             }
+
+
             return res.status(200).send({success:true,message:"Gell all Products",products:products})
+
+
+
+            // products = await Product.find({user:user})
+
+            // if(!products){
+            //     return res.status(400).send({success:true,message:"No products there",products:[]})
+            // }
 
 
     } catch (error) {
@@ -488,6 +501,28 @@ exports.uploadProductsByCategoryAdmin = catchAsyncError(async (req, res, next) =
 
     }
 
+
+
+})
+
+
+//global search ///
+
+exports.globalSearch = catchAsyncError(async (req, res, next) =>{
+
+    try{
+        const key = req.query.key
+
+        const data = await Product.find({$text:{$search:key}})
+        return res.status(200).json({
+            success:true,
+            data:data
+
+        })
+
+    }catch(error){
+    return res.status(400).send(error.stack)
+    }
 
 
 })
