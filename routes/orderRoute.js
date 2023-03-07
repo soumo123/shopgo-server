@@ -3,7 +3,7 @@ const router = express.Router()
 
 const { isAuthenticatedUser, authorizeRoles } = require('../middleware/auth')
 
-const {newOrder,getSingleOrder,myOrders,getAllOrders,updateOrder,deleteOrder,categoryAdmingetAllOrders, categoryAdminSingleOrder} = require('../controllers/orderController')
+const {newOrder,getSingleOrder,myOrders,getAllOrders,updateOrder,deleteOrder,categoryAdmingetAllOrders, categoryAdminSingleOrder, updateOrderStatusByDealer, shipmentStatusChecking} = require('../controllers/orderController')
 
 router.route('/order/new/:token').post(isAuthenticatedUser,newOrder)
 
@@ -27,6 +27,10 @@ router.route('/cat-admin/orders/:token').post(isAuthenticatedUser,categoryAdming
 router.route('/cat-admin/order/:token').get(isAuthenticatedUser,categoryAdminSingleOrder)
 
 router.route('/cat-admin/order/:id/:token').put(isAuthenticatedUser,updateOrder)
+router.route('/cat-admin/update-order/:token').put(isAuthenticatedUser,updateOrderStatusByDealer)
+router.route('/shipment-status/:token').get(isAuthenticatedUser,shipmentStatusChecking)
+
+
 
 
 module.exports = router

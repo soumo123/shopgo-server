@@ -5,17 +5,17 @@ const catchAsyncError = require('../middleware/catchAsyncError')
 const { findById } = require("../models/orderModel")
 const { sendMessages } = require("./messagesController")
 const User = require('../models/userModels')
-
+const Payment = require('../models/paymentDetailsModel')
 
 //create new order//
 
 exports.newOrder = catchAsyncError(async (req, res, next) => {
 
     const { shippingInfo, orderItems, paymentInfo, itemsPrice, taxPrice, totalPrice, shippingPrice, dealers } = req.body
-
+    let paymentData;
     let d = new Date();
     let delivered = d.setDate(d.getDate() + 5);
-    const deliveredAt = new Date(delivered).toISOString().substring(0, 10);
+    const deliveredAt = new Date(delivered).toISOString()
 
 
     const order = await Order.create({
@@ -31,13 +31,21 @@ exports.newOrder = catchAsyncError(async (req, res, next) => {
         dealers: dealers,
         deliveredAt
     })
+    console.log("order", order)
 
-
-
+    for(let i = 0 ; i<order.orderItems.length;i++){
+        paymentData = await Payment.create({
+            orderId:order.orderItems[i].id,
+            paymentStatus:paymentInfo.status,
+            deliveryDate:order.orderItems[i].deliveryTime,
+            orderItems:order.orderItems[i]
+        })
+    }
     res.status(201).json({
         success: true,
         message: 'Order created successfully',
-        order
+        order,
+        paymentData
     })
 
 })
@@ -233,10 +241,11 @@ exports.categoryAdminSingleOrder = catchAsyncError(async (req, res, next) => {
                 let order_id = allorders[i]._id
                 data.push(orderItems[j])
                 customer_id = orderItems[j].user
+                customer_name = orderItems[j].customer_name
+
                 users = await User.find({_id:customer_id})
                 allorders = await Order.find({_id:order_id})
                 shippingDetails = allorders[0].shippingInfo
-                customer_name = users[0].name
 
             }
         }
@@ -251,5 +260,73 @@ exports.categoryAdminSingleOrder = catchAsyncError(async (req, res, next) => {
         shippingDetails:shippingDetails
     })
 
+
+});
+
+
+//update order status by Dealer////////////////
+
+
+exports.updateOrderStatusByDealer = catchAsyncError(async (req, res, next) => {
+
+    const order = await Payment.find({orderId:req.query.order_id})
+    
+console.log("order",order)
+    if (!order) {
+        return next(new ErrorHandler('order not found in this Id', 404))
+    }
+
+    if (order.paymentStatus === "Delivered") {
+        return next(new ErrorHandler('You have already delivered this order', 400))
+    }
+
+    if (req.body.paymentStatus === "Shipped") {
+        order[0].orderItems.forEach(async (o) => {
+            await updateStock(o.product, o.quantity);
+        });
+    }
+    console.log("req.body.paymentStatus",req.body.paymentStatus)
+    order[0].paymentStatus = req.body.paymentStatus
+    console.log("orderss_update",order[0])
+
+    if (req.body.paymentStatus === "Delivered") {
+        // order.deliveredAt = Date.now()
+        order[0].paymentStatus = "Delivered"
+    }
+
+    await order[0].save()
+
+    res.status(200).json({
+        success: true,
+        order:order[0]
+    })
+   
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+exports.shipmentStatusChecking = catchAsyncError(async (req, res, next) => {
+
+    const orderId = req.query.order_id;
+
+    const paymentData = await Payment.find({orderId:orderId})
+    
+    if(!paymentData){
+        return res.status(400).json({message:'order not found in this Id'})
+    
+    }
+
+    return res.status(200).json({message:'Order Found', paymentData})
+   
 
 });

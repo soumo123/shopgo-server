@@ -44,7 +44,7 @@ app.use((req, res, next) => {
     return next();
   });
 
-  var whitelist =  [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_CAT_CLIENT_URL}`];
+  var whitelist = [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_CAT_CLIENT_URL}`];
   var corsOptions = {
     origin: function (origin, callback) {
       if (whitelist.indexOf(origin) !== -1) {
@@ -77,6 +77,10 @@ app.use('/api/soummya',cancel)
 
 app.use(errorMiddleware)
 // app.use(express.static(path.join(__dirname,'../client/build')))
+// var publicDir = require('path').join(__dirname,'public'); 
+
+app.use(express.static(path.join(__dirname,'public')));
+
 
 // app.get("*",(req,res)=>{
 //     res.sendFile(path.resolve(__dirname,'../client/build/index.html'))

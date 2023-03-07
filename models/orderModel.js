@@ -30,7 +30,7 @@ const orderSchema = new mongoose.Schema({
             required: true
         },
     },
-
+    
     orderItems:[
         {
 
@@ -63,6 +63,10 @@ const orderSchema = new mongoose.Schema({
                 type: String,
                 required: true,
                 default: "Processing"
+            },
+            customer_name:{
+                type:String,
+                required: true
             },
             deliveryTime:{
                 type:String
