@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
         validate: [validator.isEmail, "please enter valid email"]
     },
     number: {
-        type: Number,
+        type: String,
         required: [true, "Please enter your Phone Number"],
         unique: true,
         maxLength: [10, "Number cannot exceed 10"],

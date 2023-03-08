@@ -32,7 +32,7 @@ require('./db/conn')
 //     next();
 //    });
 app.use((req, res, next) => {
-    const allowedOrigins = [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_CAT_CLIENT_URL}`];
+    const allowedOrigins =  [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_CAT_CLIENT_URL}`];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
