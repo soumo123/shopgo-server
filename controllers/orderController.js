@@ -292,6 +292,8 @@ console.log("order",order)
     if (req.body.paymentStatus === "Delivered") {
         // order.deliveredAt = Date.now()
         order[0].paymentStatus = "Delivered"
+        order[0].orderItems[0].done = "1"
+
     }
 
     await order[0].save()

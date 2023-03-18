@@ -55,6 +55,10 @@ const orderSchema = new mongoose.Schema({
                 ref:"Product",
                 required: true
             },
+            done:{
+                type:String,
+                default:"0"
+            },
             user:{
                 type:String,
                 required: true

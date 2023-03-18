@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/soumo123/MERN-PROJECT#readme",
   "dependencies": {
+    "base64-js": "^1.5.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "cloudinary": "^1.30.1",
@@ -40,6 +41,7 @@
     "nodemon": "^2.0.19",
     "otp-generator": "^4.0.0",
     "path": "^0.12.7",
+    "resize-base64": "^1.0.12",
     "stripe": "^10.2.0",
     "validator": "^13.7.0"
   },
