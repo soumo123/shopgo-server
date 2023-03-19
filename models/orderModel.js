@@ -77,6 +77,9 @@ const orderSchema = new mongoose.Schema({
             }
         }
     ],
+    resource_id:{
+        type:Number
+    },
 
     user:{
         type:mongoose.Schema.ObjectId,

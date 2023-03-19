@@ -9,6 +9,9 @@ const paymentSchema = new mongoose.Schema({
         type: String,
         default:"Processing"
     },
+    resource_id:{
+        type:Number
+    },
     orderItems:[
         {
 

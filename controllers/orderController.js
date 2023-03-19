@@ -16,7 +16,7 @@ exports.newOrder = catchAsyncError(async (req, res, next) => {
     let d = new Date();
     let delivered = d.setDate(d.getDate() + 5);
     const deliveredAt = new Date(delivered).toISOString()
-
+    const resource_id = await createResourceId()
 
     const order = await Order.create({
         shippingInfo,
@@ -29,6 +29,7 @@ exports.newOrder = catchAsyncError(async (req, res, next) => {
         paidAt: Date.now(),
         user: req.user._id,
         dealers: dealers,
+        resource_id:resource_id,
         deliveredAt
     })
     console.log("order", order)
@@ -36,6 +37,7 @@ exports.newOrder = catchAsyncError(async (req, res, next) => {
     for(let i = 0 ; i<order.orderItems.length;i++){
         paymentData = await Payment.create({
             orderId:order.orderItems[i].id,
+            resource_id:resource_id,
             paymentStatus:paymentInfo.status,
             deliveryDate:order.orderItems[i].deliveryTime,
             orderItems:order.orderItems[i]
@@ -176,8 +178,6 @@ exports.deleteOrder = catchAsyncError(async (req, res, next) => {
 
 
 
-
-
 //category-admin ----------------->
 
 
@@ -185,6 +185,7 @@ exports.categoryAdmingetAllOrders = catchAsyncError(async (req, res, next) => {
 
     let data = []
     let totalAmount = 0
+    let resource_id;
     const user = req.body.user_id
     const allorders = await Order.find()
 
@@ -198,6 +199,7 @@ exports.categoryAdmingetAllOrders = catchAsyncError(async (req, res, next) => {
                
                 data.push(ele)
                 totalAmount = totalAmount + ele.price
+                resource_id=allorders[i].resource_id
             }
 
         })
@@ -208,13 +210,11 @@ exports.categoryAdmingetAllOrders = catchAsyncError(async (req, res, next) => {
         success: true,
         message: "Orders Viewd my Cat-Admin",
         totalAmount,
+        resource_id:resource_id,
         orders:data
     })
 
 });
-
-
-
 
 
 
@@ -266,12 +266,12 @@ exports.categoryAdminSingleOrder = catchAsyncError(async (req, res, next) => {
 
 //update order status by Dealer////////////////
 
-
 exports.updateOrderStatusByDealer = catchAsyncError(async (req, res, next) => {
 
     const order = await Payment.find({orderId:req.query.order_id})
-    
-console.log("order",order)
+    const existOrder = await Order.find({resource_id:req.body.resource_id})
+ console.log("query",req.query.order_id)
+
     if (!order) {
         return next(new ErrorHandler('order not found in this Id', 404))
     }
@@ -285,19 +285,30 @@ console.log("order",order)
             await updateStock(o.product, o.quantity);
         });
     }
-    console.log("req.body.paymentStatus",req.body.paymentStatus)
+
     order[0].paymentStatus = req.body.paymentStatus
-    console.log("orderss_update",order[0])
+
 
     if (req.body.paymentStatus === "Delivered") {
         // order.deliveredAt = Date.now()
         order[0].paymentStatus = "Delivered"
         order[0].orderItems[0].done = "1"
-
+     
+        for(let i=0;i<existOrder[0].orderItems.length;i++){
+          
+            console.log("idd",existOrder[0].orderItems[i]._id,req.query.order_id)
+            if(existOrder[0].orderItems[i]._id==req.query.order_id){
+           
+                existOrder[0].orderItems[i].done="1"
+                await existOrder[0].save()
+               
+            }
+            
+        }
     }
-
-    await order[0].save()
-
+    
+    await order[0].save()  
+   
     res.status(200).json({
         success: true,
         order:order[0]
@@ -305,15 +316,6 @@ console.log("order",order)
    
 
 });
-
-
-
-
-
-
-
-
-
 
 
 
@@ -332,3 +334,14 @@ exports.shipmentStatusChecking = catchAsyncError(async (req, res, next) => {
    
 
 });
+
+
+
+async function createResourceId(id, quantity) {
+    const randomNumber = Math.floor(Math.random() * 1000000); // Generate a random number between 0 and 999999
+    const timestamp = Date.now(); // Get the current timestamp in milliseconds
+  //   const uniqueNumber = `${randomNumber}${timestamp}`; // Combine the random number and timestamp
+  //   return parseInt(uniqueNumber); // Convert the string to a number and return
+  return randomNumber
+
+}
