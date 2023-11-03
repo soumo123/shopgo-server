@@ -1,9 +1,9 @@
 const dotenv = require('dotenv')
 var cookieParser = require('cookie-parser')
 const Cookies = require('js-cookie')
-const WebEncryption = require('../utils/decrypt')
+// const WebEncryption = require('../utils/decrypt')
 const axios = require("axios")
-const WebCrypto = new WebEncryption(process.env.decryptKey);
+// const WebCrypto = new WebEncryption(process.env.decryptKey);
 
 dotenv.config({ path: "D:/A2Z/server/config/config.env" })
 
@@ -38,12 +38,12 @@ const sendToken = async (user, statusCode, res) => {
         .catch(function (error) {
             console.log(error);
         });
-        userData.name = WebCrypto.decrypt(user.name)
+        // userData.name = WebCrypto.decrypt(user.name)
         userData.email = user.email
         userData.approve_status = user.approve_status
         userData.categories = user.categories
-        userData.address = WebCrypto.decrypt(user.address)
-        userData.number = WebCrypto.decrypt(user.number)
+        // userData.address = WebCrypto.decrypt(user.address)
+        // userData.number = WebCrypto.decrypt(user.number)
         userData.dealer_id = user.dealer_id
         userData.gender = user.gender
         userData.role = user.role

@@ -10,13 +10,13 @@ const cloudinary = require('cloudinary')
 const { find } = require('../models/userModels')
 const nodemailer = require('nodemailer');
 const Dealer = require('../models/dealer.model.js')
-const WebEncryption = require('../utils/decrypt.js')
+// const WebEncryption = require('../utils/decrypt.js')
 const getNextSequentialId = require('../utils/generateId.js')
 const veriFyAadhar = require('../utils/aadharVerfication.js')
 const axios = require("axios")
 //user registration//
 
-const WebCrypto = new WebEncryption(process.env.decryptKey);
+// const WebCrypto = new WebEncryption(process.env.decryptKey);
 
 
 
@@ -471,11 +471,11 @@ exports.registerDealer = async (req, res) => {
 
         const lastId = await getNextSequentialId("SD")
 
-        const newName = WebCrypto.encrypt(name)
-        // const newEmail = WebCrypto.encrypt(email)
-        const newNumber = WebCrypto.encrypt(number)
-        const newAddress = WebCrypto.encrypt(address)
-        const newAadhar = WebCrypto.encrypt(aadhar_no)
+        // const newName = WebCrypto.encrypt(name)
+        // // const newEmail = WebCrypto.encrypt(email)
+        // const newNumber = WebCrypto.encrypt(number)
+        // const newAddress = WebCrypto.encrypt(address)
+        // const newAadhar = WebCrypto.encrypt(aadhar_no)
 
         const user = await Dealer.create({
             name: newName, email: email, password, number: newNumber, address: newAddress, aadhar_no: newAadhar, categories: categories, gender, dealer_id: lastId,
@@ -626,12 +626,12 @@ exports.getUser = async (req, res, next) => {
             console.log(error);
         });
 
-    userData.name = WebCrypto.decrypt(user.name)
+    // userData.name = WebCrypto.decrypt(user.name)
     userData.email = user.email
     userData.approve_status = user.approve_status
     userData.categories = user.categories
-    userData.address = WebCrypto.decrypt(user.address)
-    userData.number = WebCrypto.decrypt(user.number)
+    // userData.address = WebCrypto.decrypt(user.address)
+    // userData.number = WebCrypto.decrypt(user.number)
     userData.dealer_id = user.dealer_id
     userData.gender = user.gender
     userData.role = user.role

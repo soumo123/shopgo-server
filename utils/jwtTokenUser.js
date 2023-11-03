@@ -1,9 +1,9 @@
 const dotenv = require('dotenv')
 var cookieParser = require('cookie-parser')
 const Cookies = require('js-cookie')
-const WebEncryption = require('../utils/decrypt')
+// const WebEncryption = require('../utils/decrypt')
 const axios = require("axios")
-const WebCrypto = new WebEncryption(process.env.decryptKey);
+// const WebCrypto = new WebEncryption(process.env.decryptKey);
 
 dotenv.config({ path: "D:/A2Z/server/config/config.env" })
 
