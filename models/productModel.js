@@ -20,6 +20,16 @@ const productSchema = new mongoose.Schema({
         type: Number
 
     },
+    dealer_id:{
+        type:String
+    },
+    type:{
+        type:String,
+        default:3
+    },
+    visible_for:{
+        type:Number
+    },
     actualpricebydiscount:{
         type: Number,
         default:0
@@ -52,8 +62,8 @@ const productSchema = new mongoose.Schema({
             },
         }
     ],
-    category: {
-        type: String,
+    categories: {
+        type: Number,
         required: true
     },
     stock: {
@@ -90,13 +100,19 @@ const productSchema = new mongoose.Schema({
         }
     ],
 
-    user: {
-        type: mongoose.Schema.ObjectId,
-        ref: "User",
-        required: true
+    size:{
+        type:Array
     },
+    // user: {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: "User",
+    //     required: true
+    // },
     productsearch:{
         type:String
+    },
+    productId:{
+        type:String,
     },
     deliveryDays:{
         type:String,

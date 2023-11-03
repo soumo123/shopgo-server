@@ -1,10 +1,27 @@
 const express = require('express')
 const router = express.Router()
 
-const {registerUser,loginUser,forgotPassword,resetPassword,logout,getUserDetails,updatePassword,updateProfile,getAllUsers,getSingleUser,updateUserRole,deleteUser,OtpRequest, VerifyOtp} = require('../controllers/userController')
+const {registerUser,loginUser,forgotPassword,resetPassword,logout,getUserDetails,updatePassword,updateProfile,getAllUsers,getSingleUser,updateUserRole,deleteUser,OtpRequest, VerifyOtp, registerDealer, approvedDealerByAdmin, aadharVerfication, DealerLogin, getUser} = require('../controllers/userController')
 const {isAuthenticatedUser,authorizeRoles} = require('../middleware/auth')
 
 router.route('/register').post(registerUser)
+
+router.route('/dealer/register').post(registerDealer)
+
+
+router.route('/dealer/update').put(approvedDealerByAdmin)
+
+
+router.route('/dealer/login').post(DealerLogin)
+
+router.route('/dealer/getuser').get(getUser)
+
+
+
+
+router.route('/verify').post(aadharVerfication)
+
+
 
 router.route('/login').post(loginUser)
 
@@ -31,6 +48,8 @@ router.route("/admin/user/:id/:token").get(isAuthenticatedUser,authorizeRoles("a
 router.route("/admin/user/:id/:token").put(isAuthenticatedUser,authorizeRoles("admin"),updateUserRole)
 
 router.route("/admin/user/:id/:token").delete(isAuthenticatedUser,authorizeRoles("admin"),deleteUser)
+
+
 
 router.route('/logout').get(logout)
 
