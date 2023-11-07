@@ -31,31 +31,35 @@ require('./db/conn')
 //     res.setHeader('Access-Control-Allow-Credentials', "true");
 //     next();
 //    });
-app.use((req, res, next) => {
-    const allowedOrigins =  [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_LOCAL_CAT_CLIENT_URL}`];
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-    res.header('Access-Control-Allow-Methods', 'GET, POST , OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', true);
-    return next();
-  });
 
-  var whitelist = [`${process.env.REACT_CLIENT_URL}`,`${process.env.REACT_LOCAL_CAT_CLIENT_URL}`];
-  var corsOptions = {
-    origin: function (origin, callback) {
-      if (whitelist.indexOf(origin) !== -1) {
-        callback(null, true)
-      } else {
-        callback(new Error('Not allowed by CORS'))
-      }
+const allowedOrigins = [process.env.REACT_CLIENT_URL, process.env.REACT_LOCAL_CAT_CLIENT_URL];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
   }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  return next();
+});
   // app.use(cors())
-  app.use(cors(corsOptions))
 
 app.use(express.json())
 app.use(cookieParser())
