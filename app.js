@@ -34,6 +34,8 @@ require('./db/conn')
 
 const allowedOrigins = [process.env.REACT_CLIENT_URL, process.env.REACT_LOCAL_CAT_CLIENT_URL];
 
+console.log("process.env.REACT_CLIENT_URL === ", process.env.REACT_CLIENT_URL)
+
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin)) {
@@ -46,6 +48,9 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
+
+
+
 
 app.use(cors(corsOptions));
 
