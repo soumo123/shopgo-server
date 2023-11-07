@@ -36,6 +36,8 @@ const allowedOrigins = [process.env.REACT_CLIENT_URL, process.env.REACT_LOCAL_CA
 
 console.log("process.env.REACT_CLIENT_URL === ", process.env.REACT_CLIENT_URL)
 
+
+
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin)) {
