@@ -2,6 +2,8 @@ const Product = require('../models/productModel')
 const Categories = require('../models/categoriesModel')
 const Dealer = require('../models/dealer.model.js')
 const Sizes = require('../models/size.model.js')
+const Types = require('../models/types.js')
+
 const ErrorHandler = require('../utils/errorHandler')
 const catchAsyncError = require('../middleware/catchAsyncError')
 const ApiFeatures = require('../utils/apifeature')
@@ -687,15 +689,15 @@ exports.deleteProductBySpecificDealer = async (req, res, next) => {
 
     try {
         let product = await Product.findOne({ dealer_id: dealer_id, productId: product_id })
-        console.log("product",product)
+        console.log("product", product)
         if (!product) {
             return next(new ErrorHandler("Product not found", 404))
         }
-    
+
         for (let i = 0; i < product.images.length; i++) {
             await cloudinary.v2.uploader.destroy(product.images[i].public_id);
         }
-    
+
         await product.remove()
         return res.status(200).json({ message: "Product Deleted", success: true });
 
@@ -774,12 +776,12 @@ exports.getSizesOfProduct = async (req, res, next) => {
 //Add Size //
 
 exports.addSizesOfProduct = async (req, res, next) => {
-   const body  = req.body
+    const body = req.body
     try {
         const sizeData = await Sizes.create(body)
         console.log(sizeData)
 
-        return res.status(200).json({ message: "Add Product Size", success: true});
+        return res.status(200).json({ message: "Add Product Size", success: true });
 
     } catch (error) {
         return res.status(400).json({
@@ -795,18 +797,142 @@ exports.addSizesOfProduct = async (req, res, next) => {
 
 
 exports.getAllCategories = async (req, res, next) => {
-     try {
-         const data = await Categories.find()
-         return res.status(200).json({ message: "Get all Categories", data:data,success: true});
- 
-     } catch (error) {
-         return res.status(400).json({
-             success: false,
-             error: error.stack
-         });
-     }
- }
+    try {
+        const data = await Categories.find()
+        return res.status(200).json({ message: "Get all Categories", data: data, success: true });
+
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            error: error.stack
+        });
+    }
+}
 
 
 
 
+
+//All Products //
+
+
+
+exports.AllProducts = async (req, res, next) => {
+
+    try {
+        let products;
+        let totalPage;
+        let totalCount;
+        const limit = Number(req.query.limit) || 10;
+        const offset = Number(req.query.offset) || 0;
+
+        const maxPrice = Number(req.query.maxPrice);
+        const minPrice = Number(req.query.minPrice);
+        const discount = Number(req.query.discount);
+        const visible_for =req.query.visible_for !== "" ? req.query.visible_for : undefined;
+        const categories = req.body.categories;
+
+        const latest = req.query.latest;
+
+        const filters = {};
+
+        // Add filters based on your requirements
+        if (maxPrice) {
+            filters.price = { $lte: maxPrice }; // Assuming your price field is named 'price'
+        }
+
+        if (minPrice) {
+            filters.price = { ...(filters.price || {}), $gte: minPrice };
+        }
+
+        if (categories) {
+            filters.categories = categories ;
+        }
+
+        if (discount) {
+            filters.discount = discount;
+        }
+        if (visible_for !== undefined) {
+            filters.visible_for = visible_for;
+        } else {
+            // If visible_for is not specified or an empty string, exclude the filter
+            delete filters.visible_for;
+        }
+    
+
+        totalCount = await Product.countDocuments(filters);
+
+        // Calculate the total number of pages based on the total count and the limit
+        totalPage = Math.ceil(totalCount / limit);
+
+        // Assuming 'createdAt' is the field representing the creation date
+        if (latest) {
+            // Sort by descending order of creation date to get the latest products first
+            const sortByLatest = { createdAt: -1 };
+            products = await Product.find(filters).sort(sortByLatest).skip(offset).limit(limit);
+            // Handle or return latestProducts as needed
+        } else {
+            products = await Product.find(filters).skip(offset).limit(limit);
+            // Handle or return products as needed
+        }
+
+
+        return res.status(200).json({
+            totalCount: totalCount,
+            success: true,
+            products: products,
+            totalPage: totalPage
+
+        })
+
+
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            error: error.stack
+        });
+    }
+
+
+}
+
+
+//get men or women related to clothing types listing //
+
+
+exports.types = async (req, res, next) => {
+
+    try {
+
+        const type_id = Number(req.query.type_id);
+        const gender = Number(req.query.gender);
+
+        const allTypes = await Types.find({
+            type_id:type_id,
+            gender:gender
+        })
+
+       
+
+
+        if(!allTypes){
+            return res.status(404).json({
+                success: false,
+                data: allTypes
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            data: allTypes[0].types
+        });
+
+
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            error: error.stack
+        });
+    }
+
+
+}

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {getAllproducts,createProduct,updateProduct,deleteProduct,getProductDetails,createProductReview,getProductReviews,deleteProductReviews,getAdminproducts, getDiscountProduct, likeProduct, likeProductUpdate, getLikeProducts, getAllProductsByCategoryAdmin, uploadProductsByCategoryAdmin, globalSearch, categoriesList, listOfProducts, updateProductByDealer, getAllProductsBySpecificDealer, deleteProductBySpecificDealer, getAllTypesToSpecificDealer, getSizesOfProduct, addSizesOfProduct, getAllCategories} = require('../controllers/productController')
+const {getAllproducts,createProduct,updateProduct,deleteProduct,getProductDetails,createProductReview,getProductReviews,deleteProductReviews,getAdminproducts, getDiscountProduct, likeProduct, likeProductUpdate, getLikeProducts, getAllProductsByCategoryAdmin, uploadProductsByCategoryAdmin, globalSearch, categoriesList, listOfProducts, updateProductByDealer, getAllProductsBySpecificDealer, deleteProductBySpecificDealer, getAllTypesToSpecificDealer, getSizesOfProduct, addSizesOfProduct, getAllCategories, AllProducts, types} = require('../controllers/productController')
 const { isAuthenticatedUser, authorizeRoles ,authorizeRolesforCategory} = require('../middleware/auth')
 
 
@@ -43,6 +43,9 @@ router.route("/dealer/add_size").post(addSizesOfProduct)
 
 router.route("/dealer/categories").get(getAllCategories)
 
+router.route("/types").get(types)
+
+
 
 
 
@@ -57,6 +60,10 @@ router.route('/cat-admin/product/:id/:token').put(isAuthenticatedUser,updateProd
 
 
 router.route('/search-data').get(globalSearch)
+
+
+
+router.route('/all_products').post(AllProducts)
 
 
 
